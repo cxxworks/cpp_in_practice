@@ -7,38 +7,32 @@ class FloatNumber
 {
 public:
     explicit FloatNumber(float v)
-     : value_(new float(v))
-    {
-        std::cout << "FloatNumber's constructor has called." << std::endl;
+        : value_(new float(v)) {
+        std::cout << "FloatNumber's constructor is called." << std::endl;
     }
 
-    FloatNumber(const FloatNumber& other)
-    {
+    FloatNumber(const FloatNumber& other) {
         value_ = new float(*other.value_);
-        std::cout << "FloatNumber's copy constructor has called." << std::endl;
+        std::cout << "FloatNumber's copy constructor is called." << std::endl;
     }
 
-    FloatNumber(FloatNumber&& other)
-    {
+    FloatNumber(FloatNumber&& other) {
         value_ = other.value_;
         other.value_= nullptr;
         
-        std::cout << "FloatNumber's move constructor has called." << std::endl;
+        std::cout << "FloatNumber's move constructor is called." << std::endl;
     }
 
-    FloatNumber& operator=(const FloatNumber& other)
-    {
+    FloatNumber& operator=(const FloatNumber& other) {
         *value_ = *other.value_;
 
-        std::cout << "FloatNumber's copy assignment operator has called." << std::endl;
+        std::cout << "FloatNumber's copy assignment operator is called." << std::endl;
 
         return *this;
     }
 
-    FloatNumber& operator=(FloatNumber&& other)
-    {
-        if (value_ != nullptr)
-        {
+    FloatNumber& operator=(FloatNumber&& other) {
+        if (value_ != nullptr) {
             delete value_;
         }
         
