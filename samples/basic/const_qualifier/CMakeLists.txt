@@ -1,4 +1,4 @@
-project(lambda_function)
+project(const_qualifier)
 
 include_directories(${COMMON_SOURCE_DIRS})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})

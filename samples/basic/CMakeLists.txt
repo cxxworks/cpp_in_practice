@@ -2,5 +2,7 @@ project(basic)
 
 add_subdirectory(constructors)
 add_subdirectory(extern_variable)
-add_subdirectory(lambda_function)
+add_subdirectory(lambda_expression)
 add_subdirectory(stringstream)
+add_subdirectory(initializer_list)
+add_subdirectory(const_qualifier)
