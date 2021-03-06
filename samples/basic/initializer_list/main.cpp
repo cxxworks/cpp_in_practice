@@ -1,3 +1,10 @@
+/*
+Notes:
+
+Reference:
+[1] https://en.cppreference.com/w/cpp/utility/initializer_list
+*/
+
 #include <iostream>
 #include <vector>
 #include <initializer_list>
@@ -55,7 +62,7 @@ int Test1() {
 int Test2() {
     std::initializer_list<int> il = {1, 2, 3};
     tmp_fn(il);
-    // tmp_fn({1, 2, 3}); // 因为`{1, 2, 3}`无类型，无法推导T
+    // tmp_fn({1, 2, 3}); // 编译失败: 因为`{1, 2, 3}`无类型，无法推导T
 }
 
 int Test3() {    

@@ -1,3 +1,6 @@
+#ifndef STRING_H
+#define STRING_H
+
 #include <sstream>
 #include <iostream>
 #include <string.h>
@@ -93,3 +96,5 @@ private:
 inline std::ostream& operator<<(std::ostream& os, const String& str) {
     return os << str.data();
 }
+
+#endif

@@ -1,5 +1,5 @@
-#ifndef _TEST_UTIL_H_
-#define _TEST_UTIL_H_
+#ifndef TEST_UTIL_H
+#define TEST_UTIL_H
 
 #include <string>
 #include <functional>

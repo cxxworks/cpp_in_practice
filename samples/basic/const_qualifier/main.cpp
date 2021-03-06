@@ -37,7 +37,7 @@ int Test4() {
     char ch = 'a';
     char ch2 = 'b';
     char* const const_ptr_to_ch = &ch;
-    *const_ptr_to_ch = 'c';
+    *const_ptr_to_ch = 'c'; 
     // const_ptr_to_ch = &ch2;  // 编译失败：常量指针`const_ptr_to_ch`无法修改
 }
 
