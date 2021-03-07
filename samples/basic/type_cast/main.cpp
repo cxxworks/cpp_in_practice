@@ -64,11 +64,99 @@ int TestCastPolymorphicTypePointers() {
 }
 
 int Test_static_cast() {
+    /* 
+    Notes:
+    静态强制转换。但运行时没有类型检查不能保证转换的安全。
 
+    用途:
+    1. 用于继承层次结构中基类和派生类之间的指针或引用的转换。其中向上转换（派生类指针 -> 基类指针）是安全的。
+    向下转换（基类指针 -> 派生类指针）是不安全的（由于运行时不会进行类型检查）。
+    2. 把void*转换成目标类型的指针。
+    3. 基本数据类型（非指针）之间的转换，比如从char转int.
+    3. 把任何类型的表达式转换为void类型。
+    4*/
+    
+    {
+        char ch = 'c';
+        int int_cast_from_char = static_cast<int>(ch);
+
+        double f64 = 123;
+        int int32_cast_from_f64 = static_cast<int>(f64);
+    }
+
+    {
+        double f64 = 3.14;
+        // int* int32_cast_from_f64 = static_cast<int*>(&f64); // 编译错误: invalid static_cast from type ‘double*’ to type ‘int*’
+        void* void_ptr = static_cast<void*>(&f64); // 正确
+        double* double_ptr = static_cast<double*>(void_ptr); // 正确
+        printf("*double_ptr: %f\n", *double_ptr);
+    }
+
+    {
+        Duck* duck_ptr = new Duck();
+        Anatidae* anatidae_ptr = new Anatidae();
+
+        if (Anatidae* ptr = static_cast<Anatidae*>(duck_ptr)) {
+            ptr->Fly();  // Output: Duck::Fly，是正确的
+        }
+
+        if (Duck* ptr = static_cast<Duck*>(anatidae_ptr)) {
+            ptr->Fly();  // Output: Anatidae::Fly而不是Duck::Fly，因此不太安全
+        }
+    }
 }
 
 int Test_dynamic_cast() {
+    /* 
+    Notes:
+    动态强制转换。在继承层次结构中向下转换时会进行类型检查，比static_cast更安全，但耗费成本更高，会降低程序性能.
 
+    用途:
+    1. 用于继承层次结构中基类和派生类之间的指针或引用的转换。对于指针，如果转换失败返回空指针；
+    而对于引用，则会抛出std::bad_cast异常 (定义在type_info头文件中)。
+    4*/
+
+    std::cout << "测试 派生类指针 -> 基类指针 的转换: \n";
+    {
+        Duck* duck_ptr = new Duck();
+        
+        if (Anatidae* ptr = dynamic_cast<Anatidae*>(duck_ptr)) {
+            std::cout << "ptr: " << ptr << std::endl;
+            ptr->Fly();  // Output: Duck::Fly，是正确的
+        }
+
+        delete duck_ptr;
+    }
+
+    std::cout << "测试 基类指针-> 派生类指针 的转换: \n";
+    {
+        Anatidae* anatidae_ptr = new Anatidae();
+        if (Duck* ptr = dynamic_cast<Duck*>(anatidae_ptr)) {  // ptr为nullptr
+            std::cout << "ptr: " << ptr << std::endl;
+            ptr->Fly();
+        }
+        delete anatidae_ptr;
+    }
+
+    std::cout << "测试 派生类引用 -> 基类引用 的转换: \n";
+    {
+        Duck duck;
+        Duck& duck_ref = duck;
+        Anatidae& anatidae_ref = dynamic_cast<Anatidae &>(duck_ref);
+        anatidae_ref.Fly();
+    }
+
+    std::cout << "测试 基类引用 -> 派生类引用 的转换: \n";
+    {
+        Anatidae anatidae;
+        Anatidae& anatidae_ref = anatidae;
+        try {
+            Duck& duck_ref = dynamic_cast<Duck &>(anatidae_ref);
+            duck_ref.Fly();
+        } catch(std::bad_cast& e) {
+            std::cout << "std::bad_cast exception raised when do dynamic casting. \n";
+        }
+    }
 }
 
 int Test_const_cast() {
