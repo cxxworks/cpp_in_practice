@@ -6,7 +6,7 @@
 /* 
 @brief 鸟类
  */
-class Aves {
+class Bird {
 public:
     virtual void Eat() = 0;
     virtual void Fly() = 0;
@@ -15,7 +15,7 @@ public:
 /* 
 @brief 鸭科类
  */
-class Anatidae : public Aves {
+class Anatidae : public Bird {
 public:
     Anatidae() {
         std::cout << "Anatidae::Anatidae" << std::endl;
@@ -71,7 +71,7 @@ public:
 
 
 template <typename T>
-void LetAvesInstanceFly(T&& obj) {
+void LetBirdInstanceFly(T&& obj) {
     obj->Fly();
 }
 

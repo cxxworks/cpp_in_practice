@@ -97,12 +97,12 @@ int TestUniquePtr() {
         tmp_fn3(std::make_unique<Duck>());
         // tmp_fn4(std::make_shared<Duck>()); // 错误: 参数不匹配，无法传递std::unique_ptr<Dock>， 通过类型转换后可以吗？
 
-        LetAvesInstanceFly(std::make_unique<Duck>()); // 正确: 可以通过模板函数
+        LetBirdInstanceFly(std::make_unique<Duck>()); // 正确: 可以通过模板函数
     }
 
     std::cout << "测试多态和容器: \n";
     {
-        std::vector<std::unique_ptr<Aves>> v;  // unique_ptr can be stored in a container
+        std::vector<std::unique_ptr<Bird>> v;  // unique_ptr can be stored in a container
 
         v.push_back(std::make_unique<Anatidae>());
         v.push_back(std::make_unique<Duck>());
@@ -179,7 +179,7 @@ int TestSharedPtr() {
 
     std::cout << "Test polymorphism and stored in a container: \n";
     {
-        std::vector<std::shared_ptr<Aves>> v;  // shared_ptr can be stored in a container
+        std::vector<std::shared_ptr<Bird>> v;  // shared_ptr can be stored in a container
 
         // push some items
         v.push_back(std::make_shared<Anatidae>());
@@ -225,7 +225,7 @@ int TestSharedPtr() {
         tmp_fn2(std::make_unique<Duck>());
         tmp_fn3(std::make_unique<Duck>());
         
-        LetAvesInstanceFly(std::make_shared<Duck>());
+        LetBirdInstanceFly(std::make_shared<Duck>());
     }
 
     std::cout << "测试static_cast: \n";
