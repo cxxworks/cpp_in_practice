@@ -8,7 +8,7 @@ Reference:
 #include <iostream>
 #include <vector>
 #include <initializer_list>
-#include <assert.h>
+#include <cassert>
 #include "test_util.h"
 
 template <typename T>

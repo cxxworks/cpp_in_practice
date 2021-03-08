@@ -68,14 +68,14 @@ int Test_static_cast() {
     Notes:
     静态强制转换。但运行时没有类型检查不能保证转换的安全。
 
-    用途:
+    作用:
     1. 用于继承层次结构中基类和派生类之间的指针或引用的转换。其中向上转换（派生类指针 -> 基类指针）是安全的。
-    向下转换（基类指针 -> 派生类指针）是不安全的（由于运行时不会进行类型检查）。
+       向下转换（基类指针 -> 派生类指针）是不安全的（由于运行时不会进行类型检查）。
     2. 把void*转换成目标类型的指针。
     3. 基本数据类型（非指针）之间的转换，比如从char转int.
-    3. 把任何类型的表达式转换为void类型。
-    4*/
-    
+    4. 把任何类型的表达式转换为void类型。
+    */
+
     {
         char ch = 'c';
         int int_cast_from_char = static_cast<int>(ch);
@@ -111,10 +111,10 @@ int Test_dynamic_cast() {
     Notes:
     动态强制转换。在继承层次结构中向下转换时会进行类型检查，比static_cast更安全，但耗费成本更高，会降低程序性能.
 
-    用途:
+    作用:
     1. 用于继承层次结构中基类和派生类之间的指针或引用的转换。对于指针，如果转换失败返回空指针；
-    而对于引用，则会抛出std::bad_cast异常 (定义在type_info头文件中)。
-    4*/
+       而对于引用，则会抛出std::bad_cast异常 (定义在type_info头文件中)。
+    */
 
     std::cout << "测试 派生类指针 -> 基类指针 的转换: \n";
     {
@@ -160,7 +160,43 @@ int Test_dynamic_cast() {
 }
 
 int Test_const_cast() {
+    /* 
+    Notes:
+    去除const限定的强制转换。
 
+    用途:
+    1. 将”常量指针“被强转为“非常量指针”，且仍然指向原来的对象
+    2. 将“常量引用”被强转为“非常量引用”，且仍然引用原来的对象
+    3、”将常量对象“被强转为”非常量对象“.
+    */
+
+    std::cout << "测试去除常量对象的const限定: \n";
+    {
+        const int const_int = 1;
+        int const_casted_int = const_cast<int&>(const_int);
+        printf("&const_int = %p, &const_casted_int = %p\n", &const_int, &const_casted_int);
+    }
+
+    std::cout << "测试去除常量指针的const限定: \n";
+    {
+        const int *const_int_ptr = new int(1);
+        int* const_casted_int_ptr = const_cast<int*>(const_int_ptr);
+        printf("const_int_ptr = %p, const_casted_int_ptr = %p\n", const_int_ptr, const_casted_int_ptr);
+        printf("*const_int_ptr = %d, *const_casted_int_ptr = %d\n", *const_int_ptr, *const_casted_int_ptr);
+        *const_casted_int_ptr = 2;
+        printf("*const_int_ptr = %d, *const_casted_int_ptr = %d\n", *const_int_ptr, *const_casted_int_ptr);
+    }
+
+    std::cout << "测试去除常量引用的const限定: \n";
+    {
+        int i = 1;
+        const int& const_int_ref = i;
+        int& const_casted_int_ref = const_cast<int&>(const_int_ref);
+        printf("&const_int_ref = %p, &const_casted_int_ref = %p\n", &const_int_ref, &const_casted_int_ref);
+        printf("const_int_ref = %d, const_casted_int_ref = %d\n", const_int_ref, const_casted_int_ref);
+        const_casted_int_ref = 2;
+        printf("const_int_ref = %d, const_casted_int_ref = %d\n", const_int_ref, const_casted_int_ref);
+    }
 }
 
 int Test_reinterpret_cast() {

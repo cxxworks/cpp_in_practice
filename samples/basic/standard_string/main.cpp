@@ -1,6 +1,6 @@
 #include <string>
 #include <iostream>
-#include <string.h>
+#include <cstring>
 #include <stdio.h>
 #include "test_util.h"
 

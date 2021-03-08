@@ -3,7 +3,7 @@
 
 #include <sstream>
 #include <iostream>
-#include <string.h>
+#include <cstring>
 #include <string>
 
 class String {
