@@ -8,10 +8,13 @@ Reference:
 #include <iostream>
 #include <stdio.h>
 #include <string>
+#include <cstring>
 #include <vector>
 #include "mock_duck.h"
 #include "test_util.h"
+#include "string_util.h"
 
+int test_func() { return 42; }
 
 int TestCastBasicNumericTypes() {
     uint8_t u8 = 64;
@@ -164,7 +167,7 @@ int Test_const_cast() {
     Notes:
     去除const限定的强制转换。
 
-    用途:
+    作用:
     1. 将”常量指针“被强转为“非常量指针”，且仍然指向原来的对象
     2. 将“常量引用”被强转为“非常量引用”，且仍然引用原来的对象
     3、”将常量对象“被强转为”非常量对象“.
@@ -200,7 +203,92 @@ int Test_const_cast() {
 }
 
 int Test_reinterpret_cast() {
+    /* 
+    Notes:
+    reinterpret_cast通过重新解释对象的比特位来进行强制类型转换。
+    
+    不像static_cast，但和const_cast一样，reinterpret_cast<new type>表达式不会被编译成任何CPU指令（除了整数和指针之间的转换外）
+    它纯粹是一个编译时指令，指示编译器它视为具有<new type>的类型。
+    
+    reinterpret_cast转换了操作数的类型，但仅仅是重新解释了操作数的比特位而没有进行二进制转换（比如int*转double*仅仅是复制int的比特位到double）
 
+    作用:
+    1. 整数、枚举值、指针等表达式的转换，转换后的值和表达式的一致。
+    2. 将指针转换为足够大的整数类型（std::uintptr_t）。
+    3. 将整数类型、枚举类型转换为指针类型。
+    4. 任何指向函数的指针可以被转换为指向另一个函数类型的指针。
+       转换后的指针是不安全的（undefined），但是转换回原始函数的指针是安全的。
+    5. 将函数指针和void*或者其它类型的指针之间的转换。
+    6. 将std::nullptr_t类型的值 （比如nullptr）转换为任何整数的类型。
+    7. T1*可以转换为T2*（等价于static_cast<cv T2*>(static_cast<cv void*>(expression)）。
+       当"T2's alignment is not stricter than T1's"，转换回的指针是可以yield原始值。
+    8. T1类型的左值可以转换为T2类型的引用，转换后的结果是引用原始对象的左值。
+    9. 指向T1某个成员函数的指针可以被转换为指向T2的某个成员函数的指针，转换后的指针是不安全的，但是转换回的指针是安全的。
+    10. 指向T1某个成员变量的指针可以被转换为指向T2的某个成员变量的指针。
+        转换后的指针是不安全的，但是如果"T2's alignment is not stricter than T1's"，转换回的指针可以yield原始值。
+    */
+
+    std::cout << "测试指针转整数: \n";
+    {
+        int i = 1;
+        std::uintptr_t p1 = reinterpret_cast<std::uintptr_t>(&i);
+        std::cout << "The value of &i is 0x" << std::hex << p1 << '\n';
+    }
+
+    std::cout << "测试函数指针转void*: \n";
+    {
+        void(*fp1)() = reinterpret_cast<void(*)()>(test_func);
+        int(*fp2)() = reinterpret_cast<int(*)()>(fp1);
+        std::cout << "fp2(): " << std::dec << fp2() << '\n';
+    }
+
+    std::cout << "测试T1类型的左值转换为T2类型的引用: \n";
+    {
+        int i = 1;
+        reinterpret_cast<unsigned int&>(i) = 2;
+        std::cout << "i: " << i << '\n';
+    }
+
+    std::cout << "测试T1类型的左值转换为T2类型的引用: \n";
+    {
+        int i = 32;
+        unsigned char* p = reinterpret_cast<unsigned char*>(&i);
+
+        printf("p[0] = %x\n", p[0]);
+        printf("\\x7 = %x\n", '\x7');
+
+        if(p[0] == '\x20')
+            std::cout << "This system is little-endian\n";
+        else
+            std::cout << "This system is big-endian\n";
+
+        std::cout << "hex_str: " << to_hex(p) << std::endl; // Output: 0x20 (32的十六进制表示)，说明复制了int的比特位到char*
+    }
+}
+
+
+int TestDifferenceBetween_reinterpret_cast_And_static_cast() {
+    /* 
+    reinterpret_cast和static_cast的区别在于多重继承。
+
+    比如下面的例子，打印出来的前两个地址是相同的，而static_cast转换后的地址偏移了4个字节。
+    这是因为static_cast计算了父子类指针转换的偏移量，并将之转换到正确的地址，而reinterpret_cast却不会做这一层转换。
+    */
+
+    class A {
+        public:
+        int m_a;
+    };
+    
+    class B {
+        public:
+        int m_b;
+    };
+    
+    class C : public A, public B {};
+
+    C c;
+    printf("%p, %p, %p", &c, reinterpret_cast<B*>(&c), static_cast<B*>(&c));
 }
 
 int main(int argc, char** argv) {
@@ -210,4 +298,5 @@ int main(int argc, char** argv) {
     test_decorator(Test_dynamic_cast, "Test_dynamic_cast")();
     test_decorator(Test_const_cast, "Test_const_cast")();
     test_decorator(Test_reinterpret_cast, "Test_reinterpret_cast")();
+    test_decorator(TestDifferenceBetween_reinterpret_cast_And_static_cast, "TestDifferenceBetween_reinterpret_cast_And_static_cast")();
 }
