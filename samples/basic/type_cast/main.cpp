@@ -2,7 +2,10 @@
 Notes:
 
 Reference:
-[1] 
+[1] https://en.cppreference.com/w/cpp/language/static_cast
+[2] https://en.cppreference.com/w/cpp/language/dynamic_cast
+[3] https://en.cppreference.com/w/cpp/language/const_cast
+[4] https://en.cppreference.com/w/cpp/language/reinterpret_cast
  */
 
 #include <iostream>
