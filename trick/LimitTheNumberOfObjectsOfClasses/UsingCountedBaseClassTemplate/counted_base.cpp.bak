@@ -1,0 +1,34 @@
+#include <iostream>
+#include "counted_base.h"
+
+template<typename BeingCounted>
+Counted<BeingCounted>::Counted() {
+    init();
+}
+
+template<typename BeingCounted>
+Counted<BeingCounted>::Counted(const Counted& rhs) {
+    init();
+}
+
+template<typename BeingCounted>
+Counted<BeingCounted>::~Counted() {
+    numObjects--;
+}
+
+template<typename BeingCounted>
+const int& Counted<BeingCounted>::countObjects() {
+    return numObjects;
+}
+
+template<typename BeingCounted>
+void Counted<BeingCounted>::init() {
+    if (numObjects >= kMaxObjects) {
+        throw MaxObjectsExceeded();
+    } else {
+        numObjects++;
+    }
+}
+
+template<typename BeingCounted>
+int Counted<BeingCounted>::numObjects = 0;

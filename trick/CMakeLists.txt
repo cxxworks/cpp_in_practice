@@ -1,0 +1,6 @@
+project(trick)
+
+add_subdirectory(ProhibitNonHeapObjects)
+add_subdirectory(ProhibitHeapObjects)
+add_subdirectory(HeapTrackedObjects)
+add_subdirectory(LimitTheNumberOfObjectsOfClasses)
